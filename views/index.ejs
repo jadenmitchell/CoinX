@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="description" content=""/>
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors"/>
+    <meta name="generator" content="Hugo 0.79.0"/>
+    <title>CoinX - Online Currency Distribution Market</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../assets/dist/css/bootstrap.min.css" rel="stylesheet"/>
+
+    <!-- Custom styles for this template -->
+    <link href="dashboard.css" rel="stylesheet"/>
+    <link href="./css/new-alerts.css" rel="stylesheet"/>
+    <link href="login.css" rel="stylesheet"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="/js/common.js"></script>
+  </head>
+  <body>
+<header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
+  <a class="navbar-brand px-3" href="#">$753,233 cash won</a>
+  <center><a class="navbar-brand text-nowrap px-3" href="#">server status: <font color="#558651">online</font></a></center>
+  <ul class="navbar-nav px-3">
+    <li class="nav-item text-nowrap">
+      <a class="nav-link" href="#">1,663,848 users online</a>
+    </li>
+  </ul>
+</header>
+<div class="d-flex h-100 text-center text-white">
+<div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+  <main class="px-3">
+    <h1><b>CoinX</b> live</h1>
+    <p class="lead">no membership fees, 100% secure, easy to use currency exchange platform</p>
+  </main>
+</div>
+</div>
+    <div class="album py-5">
+      <div class="container">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+          <div class="col">
+            <div class="card shadow-glass">
+              <div class="card-header text-center">
+                <h4 style="color:#b2b2b2" class="my-0 fw-normal">real time server feed</h4>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-borderless table-hover table-striped table-sm">
+                    <thead>
+                      <tr>
+                        <th>date</th>
+                        <th>challenger tag</th>
+                        <th>opponent tag</th>
+                        <th></th>
+                        <th>winnings</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>1,001</td>
+                        <td>Lorem</td>
+                        <td>ipsum</td>
+                        <td>
+                          <img src="./images/greenarrow.png"/>
+                        </td>
+                        <td>
+                          <font color="aa9108">$7</font>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>1,001</td>
+                        <td>Lorem</td>
+                        <td>ipsum</td>
+                        <td>
+                          <img src="./images/redarrow.png"/>
+                        </td>
+                        <td>
+                          <font color="aa9108">$300</font>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="d-flex justify-content-between align-items-center">
+                  <small class="text-muted">9 mins</small>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col position-absolute end-0" style="top:400px;">
+            <div class="card shadow-glass" style="box-shadow:none;">
+              <div class="card-header justify-content-center p-0">
+                <!--<h1 style="color:white; text-align: left; text-shadow: 0px 1px 6.65px rgba(0, 0, 0, 0.35);" class="my-0 fw-normal">member login</h4>-->
+                <img id="loginLogo" src="./images/login.png"/>
+                <img id="registerLogo" src="./images/registration.png" style="display:none;margin-left:15px;padding-top:10px;"/>
+              </div>
+              <div class="card-body d-flex flex-column justify-content-center pt-0 ps-25">
+                <%- include('partials/messages'); %>
+                  <div id="loginForm">
+                    <form action="/login" method="post">
+                      <input type="text" name="email" autocomplete="off" placeholder="EMAIL" class="loginForm" id="email"/>
+                      <input type="password" name="password" placeholder="PASSWORD" class="loginForm" id="pass"/>
+
+                      <div class="d-flex align-items-center">
+
+                        <button type="submit" name="submit" class="loginBtn"></button>
+                        <button id="register" type="button" class="registerBtn"></button>
+                      </div>
+                    </form>
+                    <small style="color: #605f5f; text-decoration: underline;">FORGOT PASSWORD?</small>
+                  </div>
+                  <div id="registerForm" style="display:none;">
+                    <form action="/register" method="post">
+                      <input type="text" name="register-username" autocomplete="off" placeholder="USERNAME" class="loginForm" id="register-username"/>
+                      <input type="text" name="register-email" autocomplete="off" placeholder="EMAIL" class="loginForm" id="register-email"/>
+                      <input type="password" name="register-password" placeholder="PASSWORD" class="loginForm" id="register-password"/>
+                      <input type="password" name="register-password2" placeholder="CONFIRM PASSWORD" class="loginForm" id="register-password2"/>
+
+                      <div class="d-flex align-items-center">
+                        <button id="register" class="registerBtn"></button>
+                      </div>
+                    </form>
+                    <small style="color: #605f5f; text-decoration: underline;">ALREADY HAVE AN ACCOUNT?</small>
+                  </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/index.js"></script>
+  </body>
+</html>
