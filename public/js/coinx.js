@@ -48,24 +48,74 @@ $(function () {
         }
     })
 
-    socket.on('server deposit', function (opts) {
-        if (opts.useBtc) {
-            const kluktOpts = {
-                "apikey": opts.apiKey,
-                "curr": "USD",
-                "email": opts.email,
-                "amount": opts.initWager
-            }
-            console.log(kluktOpts)
+    socket.on('server choose btc deposit', function (opts) {
+        $("#create-server-dialog").fadeOut(function () {
+            $('#deposit-fee').text(`${opts.btcWager} btc`)
+            $("#server-options").hide()
+            $("#server-bitcoin-gateway").fadeIn()
+        })
+    })
 
-            klukt.render('#klukt-widget', kluktOpts, function (payment) {
-                console.log('Payment received!!', payment)
+    socket.on('server btc deposit', function (opts) {
+        $("#server-bitcoin-gateway").fadeOut(function () {
+            $('#bitcoin-qrcode').attr('data-bc-address', opts.address)
+
+            $('#btc-address').val(opts.address)
+
+            bitcoinaddress.init({
+
+                // jQuery selector defining bitcon addresses on the page
+                // needing the boost
+                selector: '.bitcoin-address',
+
+                // Id of the DOM template element we use to decorate the addresses.
+                // This must contain placefolder .bitcoin-address
+                template: 'bitcoin-address-template',
+
+                qr: {
+                    width: 128,
+                    height: 128,
+                    colorDark: '#000000',
+                    colorLight: '#ffffff'
+                },
+
+                qrRawAddress: false
             })
+
+            $("#server-bitcoin-deposit").fadeIn()
+        })
+    })
+
+    socket.on('server btc status', function (status) {
+        if (status === 'detected') {
+            $('.bitcoin-address-container').hide()
+            $("#bitcoin-status").text('detecting payment')
+            $("#bitcoin-status-spinner").fadeIn()
+            $('#bitcoin-status-message').animate({ 'opacity': 0 }, 1000, function () {
+                $(this).text("hold on while we're confirming your payment on the network")
+            }).animate({ 'opacity': 1 }, 1000)
+        }
+        else if (status === 'min-confirmations') {
+
+        }
+    })
+
+    $('#native').on('click', function (evt) {
+        const transaction = {
+            gateway: 'native',
+            fee: escapeOutput($('#deposit-fee').text().replace(' btc', ''))
         }
 
-        $("#create-server-dialog").fadeOut(function () {
-            $("#deposit-coins").fadeIn()
-        })
+        socket.emit('create server btc deposit', transaction)
+    })
+
+    $('#open-node').on('click', function (evt) {
+        const transaction = {
+            gateway: 'open-node',
+            fee: escapeOutput($('#deposit-fee').text().replace(' btc', ''))
+        }
+
+        socket.emit('create server btc deposit', transaction)
     })
 
     $('#create-server').on('click', function (evt) {
@@ -100,16 +150,50 @@ $(function () {
 
         const isChallenger = $('#is-challenger').is(":checked")
         const useBtc = $('#use-btc').is(":checked")
+        const btcWager = escapeOutput($('#converted-currency').text().substring(2).replace(' btc', ''))
+
+        console.log('btc amount: ' + btcWager)
+
+        if (useBtc && btcWager == '0') {
+            showAlert('create-server-errors', 'bitcoin amount cannot be 0', 'danger', 1000)
+            return
+        }
 
         socket.emit('create new server', {
             roomName: createRoomName,
             password: createRoomPassword,
             initWager: createRoomInitWager,
+            btcWager: btcWager,
             minWager: createRoomMinWager,
             maxPlayers: maxPlayers,
             isChallenger: isChallenger,
             useBtc: useBtc
         })
+    })
+
+    function updateBtcConversion() {
+        const wager = escapeOutput($('#init-wager').val())
+        if (!validate(wager)) return
+
+        $.get("https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD", function (data) {
+            const amount = wager / data["USD"],
+                final = amount.toFixed(6)
+
+            $('#converted-currency').text($('<div>').html('&asymp;').text() + ` ${final} btc`)
+            $('#currency-conversion').show()
+        })
+    }
+
+    $('#use-btc').change(function () {
+        if (this.checked) {
+            updateBtcConversion()
+        }
+        else $('#currency-conversion').hide()
+    })
+
+    $('#init-wager').keyup(function () {
+        if ($('#use-btc').is(":checked"))
+            updateBtcConversion()
     })
 
     $('#init-wager').blur(function () {

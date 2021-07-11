@@ -17,7 +17,7 @@
      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"/>
      <script src="/socket.io/socket.io.js"></script>
      <script src="/js/common.js"></script>
-     <script type="text/javascript" src="https://klukt.com/klukt.js"></script>
+     <script src="/js/bitcoinaddress-bundle.min.js"></script>
    </head>
    <body>
       <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
@@ -166,7 +166,17 @@
                                <div class="input-group input-group-sm">
                                  <span class="input-group-text" id="inputGroup-sizing-sm">$</span>
                                  <input type="text" autocomplete="off" min="0.00" max="10000.00" step="0.01" id="init-wager" class="form-control" aria-label="Amount (to the nearest dollar)" placeholder="0.00"
-                                        onkeypress="return isNumberKey(this, event)" />
+                                        onkeypress="return isNumberKey(this, event)" aria-describedby="btc-convert"/>
+                               </div>
+                               <div id="currency-conversion" style="display:none;">
+                                 <div class="d-flex bd-highlight">
+                                   <div class="p-1 flex-grow-1 bd-highlight">
+                                     <div id="converted-currency" class="form-text"></div>
+                                   </div>
+                                   <div class="p-1 bd-highlight">
+                                     <button type="button" class="btn btn-danger" style="padding: .25rem .5rem;font-size: .65em;">BTC</button>
+                                   </div>
+                                 </div>
                                </div>
                                <h4>minimum wager</h4>
                                <div class="input-group input-group-sm">
@@ -188,19 +198,83 @@
                            </div>
                          </div>
 
-                         <div id="deposit-coins" style="display:none;">
-
+                         <div id="server-bitcoin-gateway" style="display:none;">
+                           <div class="p-1 m-2 border bg-light">
+                             <figure class="m-1 text-center">
+                               <blockquote class="blockquote">
+                                 <p>select payment method</p>
+                               </blockquote>
+                               <figcaption class="blockquote-footer">select between our native and lightning network</figcaption>
+                             </figure>
+                           </div>
+                           <figure class="figure d-grid m-1">
+                             <button title="1% processing fee takes 10-30 min for transaction to process" data-bs-placement="bottom" data-bs-toggle="tooltip" type="button" class="btn btn-danger" id="native">Native</button>
+                             <figcaption class="figure-caption text-center m-2">1% processing fee takes 10-30 min for transaction to process</figcaption>
+                           </figure>
+                           <figure class="figure d-grid m-1">
+                             <button title="2% processing fee instant transactions using the lightning network" data-bs-placement="bottom" data-bs-toggle="tooltip" type="button" class="btn btn-secondary" id="open-node">Open Node</button>
+                             <figcaption class="figure-caption text-center m-2">2% processing fee instant transactions using the lightning network</figcaption>
+                           </figure>
+                         </div>
+                         <div id="server-bitcoin-deposit" style="display:none;">
                            <div class="input-group input-group-sm">
-                             <span class="input-group-text" id="inputGroup-sizing-sm"><i class="fa fa-bitcoin"></i></span>
+                             <span class="input-group-text" id="inputGroup-sizing-sm">
+                               <i class="fa fa-bitcoin"></i>
+                             </span>
                              <input type="text" autocomplete="off" id="btc-address" class="form-control" placeholder="bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh" readonly=""/>
                            </div>
-                           
-                         <div id="klukt-widget"></div>
+                           <div class="p-1 m-2 border bg-light">
+                             <figure class="m-1 text-center">
+                               <blockquote class="blockquote">
+                                 <p id="bitcoin-status" class="m-1">waiting for payment</p>
+                                 <div id="bitcoin-address-template" class="bitcoin-address-container fs-6" hidden="">
+                                   <div>
+                                     <span class="bitcoin-address"></span>
+                                   </div>
+                                   <a href="#" class="bitcoin-address-action bitcoin-address-action-send">
+                                     <i class="fa fa-btc"></i>
+                                     pay from wallet
+                                   </a>
+                                   <a href="#" class="bitcoin-address-action bitcoin-address-action-copy">
+                                     <i class="fa fa-copy"></i>
+                                     copy
+                                   </a>
+                                   <a href="#" class="bitcoin-address-action bitcoin-address-action-qr">
+                                     <i class="fa fa-qrcode"></i>
+                                     qr code
+                                   </a>
+                                   <div class="bitcoin-action-hint bitcoin-action-hint-send">
+                                     sending payment to the address from locally installed Bitcoin wallet app.
+                                   </div>
+                                   <div class="bitcoin-action-hint bitcoin-action-hint-copy">
+                                     press CTRL + C or &#x2318; + C to copy the Bitcoin address.
+                                   </div>
+                                   <div class="bitcoin-action-hint bitcoin-action-hint-qr">
+                                     <p>
+                                       scan the qr code with your mobile bitcoin app to
+                                       make the payment:
+                                     </p>
+                                     <div class="bitcoin-address-qr-container mx-auto d-block">
+                                       <!-- Filled in by JS on action click -->
+                                     </div>
+                                   </div>
+                                 </div>
+                                 <strong class="bitcoin-address" id="bitcoin-qrcode"></strong>
+                                 <div class="d-flex justify-content-center">
+                                   <div class="spinner-border" id="bitcoin-status-spinner" role="status" hidden="">
+                                   </div>
+                                 </div>
+                               </blockquote>
+                               <figcaption id="bitcoin-status-message" class="blockquote-footer">make sure to send the full amount through one payment, using the same generated address for multiple payments is not supported</figcaption>
+                             </figure>
+                           </div>
+                           <h4 id="deposit-fee" class="text-center"></h4>
+                           <div id="klukt-widget"></div>
                          </div>
                        </div>
                      </div>
-                     <div class="modal-footer">
-                       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                     <div id="server-options" class="modal-footer">
+                       <button type="button" id="close-server" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                        <button type="button" id="create-server" class="btn btn-danger">Create</button>
                      </div>
                    </div>

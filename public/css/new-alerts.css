@@ -24,3 +24,15 @@
     background-color: #153b15;
     border-color: #00a600;
 }
+
+.btn-success {
+    opacity: 80%;
+    background-color: #153b15;
+    border-color: #00a600;
+}
+
+.btn-coinx {
+    opacity: 80%;
+    background-color: #3c1212;
+    border-color: #9a4646;
+}
