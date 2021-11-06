@@ -40,12 +40,17 @@ const validate = function (value) {
     return null
 };
 
+var socket
 $(function () {
-    var socket = io.connect()
+    socket = io.connect()
     socket.on('create server error', function (error) {
         if (error) {
             showAlert('create-server-errors', error, 'danger', 1000)
         }
+    })
+
+    socket.on('redirect to server', function (id) {
+        window.location.href = '/rooms/' + id
     })
 
     socket.on('server choose btc deposit', function (opts) {
@@ -97,6 +102,11 @@ $(function () {
         }
         else if (status === 'min-confirmations') {
 
+        }
+        else if (status == 'paid') {
+            $('.bitcoin-address-container').hide()
+            $("#bitcoin-status").text('paid')
+            $("#bitcoin-status-spinner").fadeOut()
         }
     })
 

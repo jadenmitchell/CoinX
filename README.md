@@ -1,2 +1,3 @@
 # CoinX
-CoinX.com project
+
+
