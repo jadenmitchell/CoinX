@@ -37,7 +37,7 @@ const config = {
     redis: {
         endpoint:
             '//redis-16246.c261.us-east-1-4.ec2.cloud.redislabs.com:16246',
-        pass: 'nvHlMibvZ5g3cBTJ4KnpljU3eUl1HE2H'
+        pass: 'pass'
     }
 }
 
