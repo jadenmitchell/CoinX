@@ -19,13 +19,12 @@ const path = require('path')
 const config = {
     mongodb: {
         user: 'jaden',
-        pass: 'Baz03coSGSSRTJAy',
+        pass: 'pass',
         database: 'coinxcluster.zmxyi.mongodb.net/coinxDB'
     },
 
     bitcoin: {
-    /*xpub: 'tpubDDtPndrewm8xJSFn1a1C4dGrJZDTcASFWFi1sEKDp5Nti457GMNnL7YhYzfALNhTppM4fwvw44L6dHqmnCBW1oKJrWmzwg4wmwJJuCGXtFR'*/
-        xpub: 'tpubD6NzVbkrYhZ4WqD247SuJe2vYwRayn1VXgGomnEeNyD732xTQULYKqNFaoqP9CtWEH242XWbgsi4sMgZ4zW1HehYerZKVZ9aGduxJRp9bu1'
+        xpub: 'tpub'
     },
 
     express: {
